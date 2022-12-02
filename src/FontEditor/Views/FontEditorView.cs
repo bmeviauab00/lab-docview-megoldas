@@ -8,11 +8,6 @@ namespace FontEditor
     /// </summary>
     public partial class FontEditorView : UserControl, IView
     {
-        public FontEditorView()
-        {
-            InitializeComponent();
-        }
-
         /// <summary>
         /// A dokumentum, melynek adatait a nézet megjeleníti.
         /// </summary>
@@ -39,7 +34,7 @@ namespace FontEditor
         }
 
         /// <summary>
-        /// A View interfész Update műveletánek implementációja.
+        /// A IView interfész Update műveletánek implementációja.
         /// </summary>
         public void Update()
         {

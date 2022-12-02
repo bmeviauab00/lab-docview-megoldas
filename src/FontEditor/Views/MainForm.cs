@@ -46,7 +46,7 @@ namespace FontEditor
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (tcDocuments.TabCount == 0)
+            if (tcDocuments.TabCount == 0 || App.Instance.ActiveDocument == null)
                 return;
 
             tcDocuments.TabPages.RemoveByKey(App.Instance.ActiveDocument.Name);
