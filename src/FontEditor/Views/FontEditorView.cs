@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using FontEditor.Documents;
+using FontEditor.DocView;
 
 namespace FontEditor
 {
@@ -23,19 +17,22 @@ namespace FontEditor
         /// A dokumentum, melynek adatait a nézet megjeleníti.
         /// </summary>
         private FontEditorDocument document;
+
         /// <summary>
         /// Az adott nézetben szerkesztett karakter
         /// </summary>
         private char editedChar;
+
         /// <summary>
         /// Az adott nézet nagyítása.
         /// </summary>
         private int zoom = 5;
-        const int offsetY = 20;
+        private const int offsetY = 20;
 
         public FontEditorView(char editedChar, FontEditorDocument document)
         {
             InitializeComponent();
+
             lblEditedChar.Text = editedChar.ToString();
             this.editedChar = editedChar;
             this.document = document;
@@ -56,14 +53,14 @@ namespace FontEditor
         {
             base.OnPaint(e);
 
-            CharDef editedCharDef = document.GetCharDef(editedChar);
+            var editedCharDef = document.GetCharDef(editedChar);
 
             for (int y = 0; y < CharDef.FontSize.Height; y++)
             {
                 for (int x = 0; x < CharDef.FontSize.Width; x++)
                 {
                     e.Graphics.FillRectangle(
-                        editedCharDef.Pixels[x,y] ? Brushes.Yellow: Brushes.Black,
+                        editedCharDef.Pixels[x, y] ? Brushes.Yellow : Brushes.Black,
                         zoom * x, offsetY + zoom * y, zoom, zoom);
                 }
             }
@@ -75,7 +72,7 @@ namespace FontEditor
         private void bZoomIn_Click(object sender, EventArgs e)
         {
             zoom++;
-            Invalidate();
+            Update();
         }
 
         /// <summary>
@@ -85,18 +82,19 @@ namespace FontEditor
         {
             if (zoom == 0)
                 return;
+
             zoom--;
-            Invalidate();
+            Update();
         }
 
         /// <summary>
-        /// Egérkattintás eseménykezelője. A felhasználó egy adott pixelen az egérrel kattintva
-        /// invertálhatja a színt.
+        /// Egérkattintás eseménykezelője.
+        /// A felhasználó egy adott pixelen az egérrel kattintva invertálhatja a színt.
         /// </summary>
         private void FontEditorView_MouseClick(object sender, MouseEventArgs e)
         {
-            int x = e.X/zoom;
-            int y = (e.Y - offsetY)/zoom;
+            int x = e.X / zoom;
+            int y = (e.Y - offsetY) / zoom;
             if (x >= CharDef.FontSize.Width)
                 return;
 

@@ -1,6 +1,6 @@
-﻿namespace FontEditor
+﻿namespace FontEditor.Views
 {
-    partial class SampleTextView
+    partial class FontView
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,17 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // SampleTextControl
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.DarkGray;
-            this.Name = "SampleTextControl";
-            this.Size = new System.Drawing.Size(534, 99);
-            this.ResumeLayout(false);
-
         }
 
         #endregion

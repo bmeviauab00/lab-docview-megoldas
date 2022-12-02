@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using FontEditor.Documents;
+using FontEditor.DocView;
 
 namespace FontEditor
 {
@@ -14,43 +8,35 @@ namespace FontEditor
     /// </summary>
     public partial class SampleTextView : UserControl, IView
     {
-        public SampleTextView()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// A dokumentum, melynek adatait a nézet megjeleníti.
-        /// </summary>
-        private FontEditorDocument document;
-
-        /// <summary>
-        /// A dokumentum, melynek adatait a nézet megjeleníti.
-        /// </summary>
-        protected Document Document
-        {
-            get { return document; }
-        }
-
         /// <summary>
         /// Az aktuálisan megjelenített mintaszöveg karakterei.
         /// </summary>
         private string sampleText = "abc";
 
         /// <summary>
+        /// A dokumentum, melynek adatait a nézet megjeleníti.
+        /// </summary>
+        private FontEditorDocument document;
+
+        public SampleTextView()
+        {
+            InitializeComponent();
+        }
+
+        /// <summary>
         /// Hozzácsatolja a nézetet az adott dokumentumhoz. Így a dokumentum változásairól
         /// a nézetünk is értesülni fog.
         /// </summary>
-        public void AttachToDoc(Document doc)
+        public void AttachToDoc(FontEditorDocument doc)
         {
             doc.AttachView(this);
-            document = (FontEditorDocument)doc;
+            document = doc;
         }
 
         /// <summary>
         /// Beállítja a mintaszöveget.
         /// </summary>
-        public void SetSampleText(String text)
+        public void SetSampleText(string text)
         {
             sampleText = text.ToLower();
             Update();
@@ -75,9 +61,9 @@ namespace FontEditor
 
             int offsetX = 0;
             int zoom = 2;
-            foreach(char c in sampleText)
+            foreach (char c in sampleText)
             {
-                CharDef charDef = document.GetCharDef(c);
+                var charDef = document.GetCharDef(c);
 
                 // A nem támogatott karaktereket ugorjuk át.
                 if (charDef == null)
@@ -92,7 +78,7 @@ namespace FontEditor
                             zoom * x + offsetX, zoom * y, zoom, zoom);
                     }
                 }
-                offsetX += CharDef.FontSize.Width*zoom + 1;
+                offsetX += CharDef.FontSize.Width * zoom + 1;
             }
         }
     }
