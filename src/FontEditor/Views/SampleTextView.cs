@@ -1,5 +1,6 @@
 ﻿using FontEditor.Documents;
 using FontEditor.DocView;
+using FontEditor.Views;
 
 namespace FontEditor
 {
@@ -69,15 +70,8 @@ namespace FontEditor
                 if (charDef == null)
                     continue;
 
-                for (int y = 0; y < CharDef.FontSize.Height; y++)
-                {
-                    for (int x = 0; x < CharDef.FontSize.Width; x++)
-                    {
-                        e.Graphics.FillRectangle(
-                            charDef.Pixels[x, y] ? Brushes.Yellow : Brushes.Black,
-                            zoom * x + offsetX, zoom * y, zoom, zoom);
-                    }
-                }
+                FontViewHelper.DrawFont(e.Graphics, charDef, offsetX, 0, zoom);
+                
                 offsetX += CharDef.FontSize.Width * zoom + 1;
             }
         }
