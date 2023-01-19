@@ -21,7 +21,10 @@
         /// Az vezérlőn levő SampleTextView-t adja vissza.
         /// </summary>
         /// <value>The sample text view.</value>
-        public SampleTextView SampleTextView => this.sampleTextControl1;
+        public SampleTextView SampleTextView
+        {
+            get { return this.sampleTextControl1; }
+        }
 
         public FontDocumentControl()
         {
@@ -44,7 +47,7 @@
             char c = abc[charIndex];
 
             // Létrehoz egy új FontEditorView-t az aktuális dokumentumhoz,
-            // és ezt be is regisztrálja a dokumentumnál (hogy a jövőben étesüljön a válatozásairól).
+            // és ezt be is regisztrálja a dokumentumnál (hogy a jövőben értesüljön a válatozásairól).
             var view = App.Instance.CreateFontEditorView(c);
             if (view == null)
                 return;

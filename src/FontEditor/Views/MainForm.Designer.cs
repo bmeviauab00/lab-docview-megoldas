@@ -95,7 +95,6 @@
             this.tcDocuments.SelectedIndex = 0;
             this.tcDocuments.Size = new System.Drawing.Size(667, 379);
             this.tcDocuments.TabIndex = 1;
-            this.tcDocuments.SelectedIndexChanged += new System.EventHandler(this.tcDocuments_SelectedIndexChanged);
             // 
             // MainForm
             // 

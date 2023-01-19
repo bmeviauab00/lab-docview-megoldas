@@ -44,7 +44,7 @@ namespace FontEditor
         }
 
         /// <summary>
-        /// A IView interfész Update műveletánek implementációja.
+        /// Az IView interfész Update műveletánek implementációja.
         /// </summary>
         public void Update()
         {
@@ -70,9 +70,9 @@ namespace FontEditor
                 if (charDef == null)
                     continue;
 
-                FontViewHelper.DrawFont(e.Graphics, charDef, offsetX, 0, zoom);
-                
-                offsetX += CharDef.FontSize.Width * zoom + 1;
+                CharDefViewModel.DrawFont(e.Graphics, charDef, offsetX, 0, zoom);
+
+                offsetX += CharDef.Size.Width * zoom + 1;
             }
         }
     }

@@ -9,7 +9,7 @@ namespace FontEditor.Documents
     public class FontEditorDocument : Document
     {
         /// <summary>
-        /// Az egyes karakterek leírását tartalmazza egy hashtáblában. A kulcs a karakter, 
+        /// Az egyes karakterek leírását tartalmazza egy hashtáblában. A kulcs a karakter,
         /// az érték a hozzá tartozó karakterdefíníció.
         /// </summary>
         private readonly Dictionary<char, CharDef> charDefs = new Dictionary<char, CharDef>();
@@ -19,9 +19,7 @@ namespace FontEditor.Documents
             : base(name)
         {
             for (char c = 'a'; c <= 'z'; c++)
-            {
                 charDefs[c] = new CharDef(c);
-            }
 
             charDefs[' '] = new CharDef(' '); // A space is támogatott.
             charDefs['!'] = new CharDef('!'); // A ! is támogatott.
@@ -30,11 +28,12 @@ namespace FontEditor.Documents
         /// <summary>
         /// Visszaadja az adott karakterhez tartozó karakterdefíníciót (a klónját).
         /// Ha nem találja, akkor a charDefForUnsupportedChars klónjával tér vissza.
-        /// Enélkül a magyar ékezetes karaktareknél pl. elesne az alkalmazás.
+        /// Enélkül pl. a magyar ékezetes karaktareknél elesne az alkalmazás.
         /// </summary>
         public CharDef GetCharDef(char c)
         {
-            return GetCharDefCore(c)?.Clone() ?? charDefForUnsupportedChars.Clone();
+            var charDef = GetCharDefCore(c);
+            return charDef != null ? charDef.Clone() : charDefForUnsupportedChars.Clone();
         }
 
         /// <summary>
@@ -84,13 +83,9 @@ namespace FontEditor.Documents
             if (charDef == null)
                 return;
 
-            for (int y = 0; y < CharDef.FontSize.Height; y++)
-            {
-                for (int x = 0; x < CharDef.FontSize.Width; x++)
-                {
+            for (int y = 0; y < CharDef.Size.Height; y++)
+                for (int x = 0; x < CharDef.Size.Width; x++)
                     charDef.Pixels[x, y] = false;
-                }
-            }
 
             UpdateAllViews();
         }

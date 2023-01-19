@@ -15,7 +15,7 @@ namespace FontEditor
         private FontEditorDocument document;
 
         /// <summary>
-        /// Az adott nézetben szerkesztett karakter
+        /// Az adott nézetben szerkesztett karakter.
         /// </summary>
         private char editedChar;
 
@@ -35,7 +35,7 @@ namespace FontEditor
         }
 
         /// <summary>
-        /// A IView interfész Update műveletánek implementációja.
+        /// Az IView interfész Update műveletánek implementációja.
         /// </summary>
         public void Update()
         {
@@ -51,7 +51,7 @@ namespace FontEditor
 
             var editedCharDef = document.GetCharDef(editedChar);
 
-            FontViewHelper.DrawFont(e.Graphics, editedCharDef, 0, offsetY, zoom);
+            CharDefViewModel.DrawFont(e.Graphics, editedCharDef, 0, offsetY, zoom);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace FontEditor
         {
             int x = e.X / zoom;
             int y = (e.Y - offsetY) / zoom;
-            if (x >= CharDef.FontSize.Width)
+            if (x >= CharDef.Size.Width)
                 return;
 
             document.InvertCharDefPixel(editedChar, x, y);
