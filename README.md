@@ -1,1 +1,1 @@
-# Szoftvertechnikák Document View labor megoldása
+# Document View labor megoldása

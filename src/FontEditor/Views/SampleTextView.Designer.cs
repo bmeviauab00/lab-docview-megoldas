@@ -30,13 +30,14 @@
         {
             this.SuspendLayout();
             // 
-            // SampleTextControl
+            // SampleTextView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DarkGray;
-            this.Name = "SampleTextControl";
-            this.Size = new System.Drawing.Size(534, 99);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Name = "SampleTextView";
+            this.Size = new System.Drawing.Size(623, 114);
             this.ResumeLayout(false);
 
         }

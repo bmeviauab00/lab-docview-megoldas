@@ -1,31 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using FontEditor.Documents;
 
 namespace FontEditor
 {
     /// <summary>
-    /// Az alkalmazás főablaka.
+    /// Az alkalmazás főablaka. A célunk az, hogy minél kevesebb logika legyen benne,
+    /// inkább csak eseménykezelőket tartalmaz és a feladatokat detegálja a megfelelő
+    /// felelősségű osztályok számára.
     /// </summary>
     public partial class MainForm : Form
     {
         public MainForm()
         {
             InitializeComponent();
-        }
-
-        /// <summary>
-        /// A tabcontrol, melynek tabfülei az egyes betűtípusok dokumentumait megjelenítik.
-        /// </summary>
-        /// <value>The tab control.</value>
-        public TabControl TabControl
-        {
-            get { return tcDocuments; }
+            App.Instance.Initialize(tcDocuments);
         }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -46,11 +33,6 @@ namespace FontEditor
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             App.Instance.SaveActiveDocument();
-        }
-
-        private void tcDocuments_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            App.Instance.UpdateActiveDocument();
         }
     }
 }

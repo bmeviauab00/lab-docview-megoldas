@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using FontEditor.DocView;
 
-namespace FontEditor
+namespace FontEditor.Documents
 {
     /// <summary>
     /// FontEditor dokumentum, a Document-ből származik. Tartalmazza a dokumentum adatait (a
@@ -12,16 +9,18 @@ namespace FontEditor
     public class FontEditorDocument : Document
     {
         /// <summary>
-        /// Az egyes karakterek leírását tartalmazza egy hashtáblában. A kulcs a karakter, 
+        /// Az egyes karakterek leírását tartalmazza egy hashtáblában. A kulcs a karakter,
         /// az érték a hozzá tartozó karakterdefíníció.
         /// </summary>
-        Dictionary<char, CharDef> charDefs = new Dictionary<char, CharDef>();
-        CharDef charDefForUnsupportedChars = new CharDef('�');
+        private readonly Dictionary<char, CharDef> charDefs = new Dictionary<char, CharDef>();
+        private readonly CharDef charDefForUnsupportedChars = new CharDef('�');
 
-        public FontEditorDocument(string name): base(name)
+        public FontEditorDocument(string name)
+            : base(name)
         {
             for (char c = 'a'; c <= 'z'; c++)
                 charDefs[c] = new CharDef(c);
+
             charDefs[' '] = new CharDef(' '); // A space is támogatott.
             charDefs['!'] = new CharDef('!'); // A ! is támogatott.
         }
@@ -29,11 +28,11 @@ namespace FontEditor
         /// <summary>
         /// Visszaadja az adott karakterhez tartozó karakterdefíníciót (a klónját).
         /// Ha nem találja, akkor a charDefForUnsupportedChars klónjával tér vissza.
-        /// Enélkül a magyar ékezetes karaktareknél pl. elesne az alkalmazás.
+        /// Enélkül pl. a magyar ékezetes karaktareknél elesne az alkalmazás.
         /// </summary>
         public CharDef GetCharDef(char c)
         {
-            var charDef = getCharDef(c);
+            var charDef = GetCharDefCore(c);
             return charDef != null ? charDef.Clone() : charDefForUnsupportedChars.Clone();
         }
 
@@ -41,24 +40,21 @@ namespace FontEditor
         /// Visszaadja az adott karakterhez tartozó karakterdefíníciót.
         /// Ha nincs az adott karakterhez tartozó definíció, nullal tér vissza.
         /// </summary>
-        private CharDef getCharDef(char c)
+        private CharDef GetCharDefCore(char c)
         {
-            CharDef f;
-            if (!charDefs.TryGetValue(c, out f))
-                return null;
-            return f;
+            return !charDefs.TryGetValue(c, out var f) ? null : f;
         }
 
         /// <summary>
-        /// Invertálja az adott karakterhez tartozó karakterdefíníció x, y koordinátájának
-        /// pixelét.
+        /// Invertálja az adott karakterhez tartozó karakterdefíníció x, y koordinátájának pixelét.
         /// </summary>
         public void InvertCharDefPixel(char c, int x, int y)
         {
-            CharDef fd = getCharDef(c);
-            if (fd == null)
+            var charDef = GetCharDefCore(c);
+            if (charDef == null)
                 return;
-            fd.Pixels[x, y] = !fd.Pixels[x, y];
+
+            charDef.Pixels[x, y] = !charDef.Pixels[x, y];
 
             UpdateAllViews();
         }
@@ -67,12 +63,14 @@ namespace FontEditor
         /// Az adott karakterhez tartozó karakterdefíníció x, y koordinátájának színét állítja/törli
         /// a val bool paraméter függvényében.
         /// </summary>
-        public void SetCharDefPixel(char c, int x, int y, bool val)
+        public void SetCharDefPixel(char c, int x, int y, bool value)
         {
-            CharDef fd = getCharDef(c);
-            if (fd == null)
+            var charDef = GetCharDefCore(c);
+            if (charDef == null)
                 return;
-            fd.Pixels[x, y] = val;
+
+            charDef.Pixels[x, y] = value;
+
             UpdateAllViews();
         }
 
@@ -81,10 +79,14 @@ namespace FontEditor
         /// </summary>
         public void ClearCharDef(char c)
         {
-            CharDef fd = getCharDef(c);
-            for (int y = 0; y < CharDef.FontSize.Height; y++)
-                for (int x = 0; x < CharDef.FontSize.Width; x++)
-                    fd.Pixels[x, y] = false;
+            var charDef = GetCharDefCore(c);
+            if (charDef == null)
+                return;
+
+            for (int y = 0; y < CharDef.Size.Height; y++)
+                for (int x = 0; x < CharDef.Size.Width; x++)
+                    charDef.Pixels[x, y] = false;
+
             UpdateAllViews();
         }
     }

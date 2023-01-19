@@ -13,13 +13,10 @@ namespace FontEditor
             // ApplicationConfiguration.Initialize();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            // A legjobb megközelítés a SystemAware lenne (alapértelmezett), de azzal nem jól skálázza
-            // a rajzokat nagy DPI-n.
+            // A legjobb megközelítés a SystemAware lenne (alapértelmezett), de azzal nem jól skálázza rajzokat nagy DPI-n.
             Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
 
-            var mainForm = new MainForm();
-            App.Initialize(mainForm);
-            Application.Run(mainForm);
+            Application.Run(new MainForm());
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace FontEditor
+﻿namespace FontEditor.DocView
 {
     /// <summary>
     /// Az egyes dokumentum típusok ősosztálya. Bár esetünkben csak egy dokumentum típus
@@ -13,28 +8,16 @@ namespace FontEditor
     public abstract class Document
     {
         /// <summary>
-        /// Lásd Name property.
-        /// </summary>
-        private string name;
-
-        /// <summary>
         /// A nézetek listája, melyek a dokumentumot megjelenítik. 
         /// </summary>
-        List<IView> views = new List<IView>();
-
-        /// <summary>
-        /// A dokumentum neve. A FontEditorDocument esetén amit a felhasználó megad, tipikusan
-        /// a betűtípus nevét fogja megadni.
-        /// </summary>
-        public string Name
-        {
-            get { return name; }
-        }
+        private readonly List<IView> views = new List<IView>();
 
         public Document(string name)
         {
-            this.name = name;
+            Name = name;
         }
+
+        public string Name { get; }
 
         /// <summary>
         /// Egy nézetet beregisztrál a dokumentumhoz.
@@ -54,14 +37,16 @@ namespace FontEditor
         {
             views.Remove(v);
         }
-        
+
         /// <summary>
         /// Frissíti az összes, dokumentumhoz tartozó nézetet.
         /// </summary>
         protected void UpdateAllViews()
         {
-            foreach (IView view in views)
+            foreach (var view in views)
+            {
                 view.Update();
+            }
         }
 
         /// <summary>

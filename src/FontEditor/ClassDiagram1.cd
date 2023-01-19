@@ -1,20 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
-  <Class Name="FontEditor.Document">
-    <Position X="5" Y="0.5" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>EAAAAAAAAAAQEAAAAAAAAAQAAAAEIAAAAAAAAAIIAAA=</HashCode>
-      <FileName>Document.cs</FileName>
-    </TypeIdentifier>
-    <ShowAsCollectionAssociation>
-      <Field Name="views" />
-    </ShowAsCollectionAssociation>
-  </Class>
   <Class Name="FontEditor.SampleTextView">
-    <Position X="7.75" Y="5.75" Width="3" />
+    <Position X="9.75" Y="6.5" Width="3" />
     <TypeIdentifier>
-      <HashCode>ABSAAAAAACAAAAAAAACAAAACAAKIAAACAAAAAAAAAAA=</HashCode>
-      <FileName>SampleTextView.cs</FileName>
+      <HashCode>ABSAAAAAACAAAAAAAACAAAACAAKIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\SampleTextView.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="document" />
@@ -22,10 +12,10 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FontEditor.FontEditorView">
-    <Position X="10.75" Y="1.75" Width="2.5" />
+    <Position X="11" Y="0.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AASAAAEAACAgAIBAAACAABACAgoACAAAAgAIQAAAAAA=</HashCode>
-      <FileName>FontEditorView.cs</FileName>
+      <FileName>Views\FontEditorView.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="document" />
@@ -33,40 +23,53 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FontEditor.App">
-    <Position X="0.75" Y="0.5" Width="2.25" />
+    <Position X="0.5" Y="0.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAIAASACAQAAAgABIAAAkAIEAAAAQAAAAAAAABA=</HashCode>
+      <HashCode>AAAAAAAAACAAAAAAAAABIAAAkQIEAAAAQAAAAAAAAAA=</HashCode>
       <FileName>App.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Field Name="activeDocument" />
+      <Property Name="ActiveDocument" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="documents" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="FontEditor.CharDef">
-    <Position X="1.5" Y="5.25" Width="1.5" />
+  <Class Name="FontEditor.DocView.Document">
+    <Position X="4.5" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAQEAAAAAAAAAQAAAAAIAAAAAAAAAIIAAA=</HashCode>
+      <FileName>DocView\Document.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="views" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="FontEditor.Documents.CharDef">
+    <Position X="7.5" Y="9" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAIAAAAAAAAAAAAAAABAgAAAAAAAAAAAAAAAAAAABA=</HashCode>
-      <FileName>CharDef.cs</FileName>
+      <FileName>Documents\CharDef.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="FontEditor.FontEditorDocument">
-    <Position X="5" Y="3.5" Width="2.5" />
+  <Class Name="FontEditor.Documents.FontEditorDocument">
+    <Position X="4.5" Y="6.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAgAAAAIAAAAABAAAAAAABAAEAAAAAAAAEAA=</HashCode>
-      <FileName>FontEditorDocument.cs</FileName>
+      <HashCode>AAAAAAAAABAAAAIAAAAABIAAAAAABAAEAAAAAAAAEAA=</HashCode>
+      <FileName>Documents\FontEditorDocument.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="charDefForUnsupportedChars" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="charDefs" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Interface Name="FontEditor.IView">
-    <Position X="9" Y="0.5" Width="1.5" />
+  <Interface Name="FontEditor.DocView.IView">
+    <Position X="8" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IView.cs</FileName>
+      <FileName>DocView\IView.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Font Name="Tahoma" Size="8.25" />

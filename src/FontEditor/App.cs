@@ -1,69 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using FontEditor.Documents;
 
 namespace FontEditor
 {
     /// <summary>
-    /// Az alkalmazást reprezentálja. Egy példányt kell létrehozni belőle az Initialize 
+    /// Az alkalmazást reprezentálja. Egy példányt kell létrehozni belőle az Initialize
     /// hívásával, ez lesz a "gyökérobjektum". Ez bármely osztály számára hozzáférhető az
     /// App.Instance propertyn keresztül.
+    /// Az egyszerűség érdekében egy osztály, de ideális esetben szét lenne szedve a pl. a következő
+    /// osztályokra a felelősségi köröknek megfelelően:
+    /// * DocumentManager: a megjelenítéstől függetlenül a dokumentumokat tárolná.
+    /// * ViewManager: feladata a nézetek menedzselése, tabcontrolokhoz hozzáadása stb. lenne
     /// </summary>
     public class App
     {
         /// <summary>
-        /// Az aktív dokumentum (melynek tabfüle ki van választva).
+        /// Elérhetővé teszi mindenki számára az alkalmazásobjektumot (App.Instance-ként érhető el.)
         /// </summary>
-        private Document activeDocument;
+        /// <remarks>
+        /// Ez így nem szálbiztos, de ezzel most nem foglalkozunk
+        /// </remarks>
+        public static App Instance { get; private set; } = new App();
+
+        /// <summary>
+        /// Alapértelmezett konstruktor láthatóságának módosítása privátra
+        /// </summary>
+        private App()
+        {
+        }
+
         /// <summary>
         /// Az alkalmazáshoz tartozó dokumentumok listája.
         /// </summary>
-        private List<Document> documents = new List<Document>();
+        private readonly List<FontEditorDocument> documents = new List<FontEditorDocument>();
 
         /// <summary>
-        /// A főablakot tárolja.
+        /// Az aktív dokumentum (melynek tabfüle ki van választva).
         /// </summary>
-        private MainForm mainForm;
+        public FontEditorDocument ActiveDocument { get; private set; }
 
         /// <summary>
-        /// Az alkalmazásobjektum tárolására szolgál. 
+        /// tabControl, ezen nyílnak meg a dokumentumok a felületen (minden dokumentumnak
+        /// egy külön tab). A TabControl a MainForm-on található.
         /// </summary>
-        private static App theApp;
-        
-        /// <summary>
-        /// Elérhetővé teszi mindenki számára az alkalmazásobjektumot (App.Instance-ként
-        /// érhető el.)
-        /// </summary>
-        public static App Instance
-        {
-            get { return theApp; }
-        }
-        /// <summary>
-        /// Létrehozza az alkalmazásobjektumot.
-        /// </summary>
-        public static void Initialize(MainForm form)
-        {
-            theApp = new App();
-            theApp.mainForm = form;
-        }
+        private TabControl tabControl;
 
-        /// <summary>
-        /// A főablak.
-        /// </summary>
-        public MainForm MainForm
+        public void Initialize(TabControl tabControl)
         {
-            get { return mainForm; }
-        }
-        
-        /// <summary>
-        /// Visszaadja az aktív dokumentumot.
-        /// </summary>
-        /// <returns></returns>
-        public Document GetActiveDocument()
-        {
-            return activeDocument;
+            this.tabControl = tabControl;
+
+            // Az eseménykezelőt lamda függvény formájában adjuk meg (de írhatnánk egy külün függvényt is)
+            this.tabControl.SelectedIndexChanged += (sender, e) =>
+                {
+                    if (tabControl.TabCount != 0)
+                        App.Instance.UpdateActiveDocument(tabControl.SelectedTab.Name);
+                };
         }
 
         /// <summary>
@@ -71,9 +61,11 @@ namespace FontEditor
         /// </summary>
         public void OpenDocument()
         {
+            throw new NotImplementedException();
+
             /* Lépések:
              * - Fájl útvonal megkérdezése a felhasználótól (OpenFileDialog).
-             * - Új dokumentum objektum létrehozása 
+             * - Új dokumentum objektum létrehozása
              *      doc = new FontEditorDocument();
              * - Dokumentum tartalmának betöltése
              *      doc.LoadDocument(path);
@@ -88,15 +80,14 @@ namespace FontEditor
         /// </summary>
         public void SaveActiveDocument()
         {
-            if (activeDocument == null)
+            if (ActiveDocument == null)
                 return;
 
-            // Útvonal bekérése a felhasználótól a SaveFileDialog segítségével.
-            // ..
+            // TODO  Útvonal bekérése a felhasználótól a SaveFileDialog segítségével.
             string path = "";
 
             // A dokumentum adatainak elmentése.
-            activeDocument.SaveDocument(path);
+            ActiveDocument.SaveDocument(path);
         }
 
         /// <summary>
@@ -104,11 +95,13 @@ namespace FontEditor
         /// </summary>
         public void CloseActiveDocument()
         {
-            if (mainForm.TabControl.TabPages.Count == 0)
+            // Nincs egy dokumentum sem megnyitva
+            if (ActiveDocument == null)
                 return;
 
-            mainForm.TabControl.TabPages.RemoveByKey(activeDocument.Name);
-            documents.Remove(activeDocument);
+            tabControl.TabPages.RemoveByKey(ActiveDocument.Name);
+
+            documents.Remove(ActiveDocument);
         }
 
         /// <summary>
@@ -116,69 +109,97 @@ namespace FontEditor
         /// </summary>
         public void NewDocument()
         {
-            // Bekérdezzük az új font típus (dokumentum) nevét a 
+            // Bekérdezzük az új font típus (dokumentum) nevét a
             // felhasználótól egy modális dialógs ablakban.
-            NewDocForm form = new NewDocForm();
+            var form = new NewDocForm(GetDocumentNames());
             if (form.ShowDialog() != DialogResult.OK)
                 return;
 
-            // Új dokumentum objektum létrehozása és felvétele a 
-            // dokumentum listába.
-            Document doc = new FontEditorDocument(form.FontName);
+            // Új dokumentum objektum létrehozása és felvétele a dokumentum listába.
+            var doc = new FontEditorDocument(form.FontName);
             documents.Add(doc);
-            // Az első paraméter egy kulcs, a második a tab falirata
+
+            // Az új tab lesz az aktív, az activeDocument tagváltozót erre kell állítani.
+            UpdateActiveDocument(doc.Name);
+
+            CreateTabForNewDocument(doc);
+        }
+
+        /// <summary>
+        /// Létrehoz egy tabot az dokumentumhoz.
+        /// </summary>
+        private void CreateTabForNewDocument(FontEditorDocument doc)
+        {
+            if (doc == null)
+                return;
+
+            var name = doc.Name;
 
             // Egy új tabra felteszi a dokumentumhoz tartozó felületelemeket.
             // Ezeket egy UserControl, a FontDocumentControl fogja össze.
             // Így csak ebből kell egy példányt az új tabpage-re feltenni.
-            mainForm.TabControl.TabPages.Add(form.FontName, form.FontName);
-            FontDocumentControl documentControl = new FontDocumentControl();
-            TabPage tp = mainForm.TabControl.TabPages[form.FontName];
+            // Az első paraméter egy kulcs, a második a tab falirata
+            tabControl.TabPages.Add(name, name);
+
+            var documentControl = new FontDocumentControl();
+            var tp = tabControl.TabPages[name];
             tp.Controls.Add(documentControl);
             documentControl.Dock = DockStyle.Fill;
 
-            // SampleTextView beregisztrálása a documentnél, hogy
-            // értesüljön majd a dokumentum változásairól.
+            // SampleTextView beregisztrálása a documentnél,
+            // hogy értesüljön majd a dokumentum változásairól.
             documentControl.SampleTextView.AttachToDoc(doc);
 
-            // Az új tab legyen a kiválasztott. 
-            mainForm.TabControl.SelectTab(tp);
-
-            // Az új tab lesz az aktív, az activeDocument
-            // tagváltozót erre kell állítani.
-            UpdateActiveDocument();
+            // Az új tab legyen a kiválasztott.
+            tabControl.SelectTab(tp);
         }
 
         /// <summary>
-        /// Frissíti az activeDocument változót, hogy az aktuálisan kiválasztott tabhoz tartozó dokumentumra 
-        /// mutasson.
+        /// Létrehoz egy új FontEditorView-t az aktuális dokumentumhoz,
+        /// és ezt be is regisztrálja a dokumentumnál (hogy a jövőben értesüljön a válatozásairól).
         /// </summary>
-        public void UpdateActiveDocument()
+        public FontEditorView CreateFontEditorView(char c)
         {
-            if (mainForm.TabControl.TabPages.Count == 0)
-                activeDocument = null;
+            if (ActiveDocument == null)
+                return null;
+
+            var view = new FontEditorView(c, ActiveDocument);
+            ActiveDocument.AttachView(view);
+
+            return view;
+        }
+
+        /// <summary>
+        /// Frissíti az activeDocument változót,
+        /// hogy az aktuálisan kiválasztott tabhoz tartozó dokumentumra mutasson.
+        /// </summary>
+        private void UpdateActiveDocument(string name)
+        {
+            if (name == null)
+            {
+                ActiveDocument = null;
+            }
             else
             {
-                foreach (Document document in documents)
-                    if (document.Name == mainForm.TabControl.SelectedTab.Name)
-                        activeDocument = document;
+                foreach (var document in documents)
+                {
+                    if (document.Name == name)
+                        ActiveDocument = document;
+                }
             }
         }
 
         /// <summary>
-        /// Létrehoz egy új FontEditorView-t az aktuális dokumentumhoz, és ezt be is regisztrálja a 
-        /// dokumentumnál (hogy a jövőben étesüljön a válatozásairól).
+        /// Visszadja az összes dokumentum nevét egy tömbben.
         /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        public IView CreateFontEditorView(char c)
+        private string[] GetDocumentNames()
         {
-            Document doc = GetActiveDocument();
-            if (doc == null)
-                return null;
-            FontEditorView view = new FontEditorView(c, (FontEditorDocument)doc);
-            doc.AttachView(view);
-            return view;
+            // Ezt nem tanuljuk a tárgy keretében, majd szakirányon lesz.
+            // A lényege, hogy a Select-tel projekciót tudunk végrehajtani
+            // egy gyűjtemény elemein (hasonlóan az adatbázisok select utasításához).
+            // Egy lambda kifejezéssel adjuk meg mi a projekció kimenete.
+            return documents
+                .Select(document => document.Name).ToArray();
         }
     }
 }
