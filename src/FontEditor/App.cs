@@ -36,7 +36,7 @@ namespace FontEditor
         /// <summary>
         /// Az aktív dokumentum (melynek tabfüle ki van választva).
         /// </summary>
-        public FontEditorDocument? ActiveDocument { get; private set; }
+        public FontEditorDocument ActiveDocument { get; private set; }
 
         /// <summary>
         /// tabControl, ezen nyílnak meg a dokumentumok a felületen (minden dokumentumnak
@@ -158,7 +158,7 @@ namespace FontEditor
         /// Létrehoz egy új FontEditorView-t az aktuális dokumentumhoz,
         /// és ezt be is regisztrálja a dokumentumnál (hogy a jövőben értesüljön a válatozásairól).
         /// </summary>
-        public FontEditorView? CreateFontEditorView(char c)
+        public FontEditorView CreateFontEditorView(char c)
         {
             if (ActiveDocument == null)
                 return null;

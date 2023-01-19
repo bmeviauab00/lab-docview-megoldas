@@ -40,7 +40,7 @@ namespace FontEditor.Documents
         /// Visszaadja az adott karakterhez tartozó karakterdefíníciót.
         /// Ha nincs az adott karakterhez tartozó definíció, nullal tér vissza.
         /// </summary>
-        private CharDef? GetCharDefCore(char c)
+        private CharDef GetCharDefCore(char c)
         {
             return !charDefs.TryGetValue(c, out var f) ? null : f;
         }
