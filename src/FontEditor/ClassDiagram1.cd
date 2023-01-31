@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
   <Class Name="FontEditor.SampleTextView">
-    <Position X="9.75" Y="6.5" Width="3" />
+    <Position X="9" Y="5.25" Width="3" />
     <TypeIdentifier>
       <HashCode>ABSAAAAAACAAAAAAAACAAAACAAKIAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Views\SampleTextView.cs</FileName>
@@ -12,7 +12,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="FontEditor.FontEditorView">
-    <Position X="11" Y="0.5" Width="2.5" />
+    <Position X="10" Y="0.5" Width="4.25" />
     <TypeIdentifier>
       <HashCode>AASAAAEAACAgAIBAAACAABACAgoACAAAAgAIQAAAAAA=</HashCode>
       <FileName>Views\FontEditorView.cs</FileName>
@@ -24,8 +24,22 @@
   </Class>
   <Class Name="FontEditor.App">
     <Position X="0.5" Y="0.5" Width="3.25" />
+    <AssociationLine Name="documents" Type="FontEditor.Documents.FontEditorDocument" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.312" Y="3.724" />
+        <Point X="1.312" Y="5.344" />
+        <Point X="4" Y="5.344" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="ActiveDocument" Type="FontEditor.Documents.FontEditorDocument" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.625" Y="3.724" />
+        <Point X="1.625" Y="4.891" />
+        <Point X="4" Y="4.891" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAACAAAAAAAAABIAAAkQIEAAAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AAAABAAAACAAAQAAAAABIAAEkQIEAAAAQAAAAAAAAAA=</HashCode>
       <FileName>App.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -46,14 +60,28 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="FontEditor.Documents.CharDef">
-    <Position X="7.5" Y="9" Width="1.5" />
+    <Position X="0.75" Y="6.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAIAAAAAAAAAAAAAAABAgAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <HashCode>AAAIAAAAAAAAgAAAAAABAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
       <FileName>Documents\CharDef.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FontEditor.Documents.FontEditorDocument">
-    <Position X="4.5" Y="6.25" Width="2.5" />
+    <Position X="4" Y="4.5" Width="3.5" />
+    <AssociationLine Name="charDefs" Type="FontEditor.Documents.CharDef" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.562" Y="6.423" />
+        <Point X="5.562" Y="6.812" />
+        <Point X="3" Y="6.812" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="charDefForUnsupportedChars" Type="FontEditor.Documents.CharDef" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.75" Y="6.423" />
+        <Point X="5.75" Y="7.438" />
+        <Point X="3" Y="7.438" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAIAAAAABIAAAAAABAAEAAAAAAAAEAA=</HashCode>
       <FileName>Documents\FontEditorDocument.cs</FileName>
